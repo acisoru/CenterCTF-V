@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate, max-age=0">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    <title>Морской Бой - Таблица рейтинга</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/scoreboard.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <div class="profile-section">
+            <div class="profile-info">
+                <div class="avatar-wrapper">
+                    <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDAiIGhlaWdodD0iMTAwIj48cmVjdCB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgZmlsbD0iI2YyZjJmMiIvPjx0ZXh0IHg9IjUwIiB5PSI1MCIgZm9udC1zaXplPSIxOCIgdGV4dC1hbmNob3I9Im1pZGRsZSIgYWxpZ25tZW50LWJhc2VsaW5lPSJtaWRkbGUiIGZpbGw9IiM2NjY2NjYiPtCX0LDQs9GA0YPQt9C60LA8L3RleHQ+PC9zdmc+" alt="Аватар пользователя" id="userAvatar">
+                </div>
+                <div class="user-details">
+                    <div class="user-name" id="userName">
+                        Загрузка...
+                    </div>
+                    <div class="user-rating">
+                        <span class="rating-value" id="userRating">--</span>
+                        <span class="rating-stars">
+                            <i class="far fa-star"></i>
+                            <i class="far fa-star"></i>
+                            <i class="far fa-star"></i>
+                            <i class="far fa-star"></i>
+                            <i class="far fa-star"></i>
+                        </span>
+                    </div>
+                </div>
+            </div>
+            <div class="user-actions">
+                <button class="action-btn scoreboard-btn" id="scoreboardBtn" title="Таблица рекордов">
+                    <i class="fas fa-trophy"></i>
+                </button>
+                <button class="action-btn logout-btn" id="logoutBtn" title="Выйти">
+                    <i class="fas fa-sign-out-alt"></i>
+                </button>
+            </div>
+        </div>
+
+        <div class="main-content">
+            <div class="nav-controls">
+                <a href="index.html" class="back-btn"><i class="fas fa-arrow-left"></i> На главную</a>
+            </div>
+            <h1 class="title">Морской Бой - Адмиральский Рейтинг</h1>
+            
+            <div class="leaderboard">
+                <h2 class="leaderboard-title">Общий рейтинг капитанов</h2>
+                <table class="leaderboard-table">
+                    <thead>
+                        <tr>
+                            <th>Ранг</th>
+                            <th>Капитан</th>
+                            <th>Рейтинг</th>
+                            <th>Победы</th>
+                            <th>Поражения</th>
+                            <th class="hidden-mobile">Сыграно</th>
+                            <th>Победы %</th>
+                        </tr>
+                    </thead>
+                    <tbody id="leaderboardBody">
+                        <tr>
+                            <td colspan="7" style="text-align: center; padding: 20px;">
+                                Загрузка данных...
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div class="pagination">
+                    <button id="prevPage" disabled>Назад</button>
+                    <span>Страница <span id="currentPage">1</span> из <span id="totalPages">1</span></span>
+                    <button id="nextPage">Вперед</button>
+                </div>
+            </div>
+            
+        </div>
+
+        <div class="footer">
+            <div class="imperial-seal"></div>
+            <p>Создано по указу Его Императорского Величества, Лето 1696</p>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE_URL = '/api';
+        
+        let currentPage = 1;
+        let totalPages = 1;
+        const playersPerPage = 10;
+
+        async function loadLeaderboardPage(page) {
+            try {
+                const response = await fetch(`${API_BASE_URL}/leaderboard/get-leaderboard?page=${page}`);
+                const data = await response.json();
+                
+                if (!data.entries) {
+                    displayPlayers([]);
+                    if (page > 1) {
+                        currentPage = page - 1;
+                        loadLeaderboardPage(currentPage);
+                    } else {
+                        currentPage = 1;
+                        document.getElementById('currentPage').textContent = currentPage;
+                        document.getElementById('prevPage').disabled = true;
+                        document.getElementById('nextPage').disabled = true;
+                    }
+                    return;
+                }
+                
+                const players = data.entries.map(entry => {
+                    const total = entry.wins + entry.losses;
+                    
+                    let winRate = 0;
+                    if (total > 0) {
+                        winRate = Math.round((entry.wins / total) * 100);
+                    }
+                    
+                    let winRateClass = 'medium';
+                    if (winRate >= 70) {
+                        winRateClass = 'high';
+                    } else if (winRate <= 30) {
+                        winRateClass = 'low';
+                    }
+                    
+                    const rating = 1200 + (entry.wins * 30) - (entry.losses * 20);
+                    
+                    return {
+                        rank: entry.rank,
+                        name: entry.username,
+                        rating: rating,
+                        wins: entry.wins,
+                        losses: entry.losses,
+                        total: total,
+                        winRate: winRate,
+                        winRateClass: winRateClass,
+                        avatar: entry.avatar
+                    };
+                });
+                
+                displayPlayers(players);
+                
+                currentPage = data.page;
+                totalPages = data.totalPages;
+                
+                document.getElementById('currentPage').textContent = currentPage;
+                document.getElementById('totalPages').textContent = totalPages;
+                document.getElementById('prevPage').disabled = currentPage <= 1;
+                document.getElementById('nextPage').disabled = currentPage >= totalPages;
+                
+            } catch (error) {
+                console.error('Ошибка при загрузке данных таблицы лидеров:', error);
+                const tbody = document.getElementById('leaderboardBody');
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="7" style="text-align: center; padding: 20px; color: #c62828;">
+                            Ошибка при загрузке данных. Пожалуйста, попробуйте позже.
+                        </td>
+                    </tr>
+                `;
+                
+                document.getElementById('prevPage').disabled = true;
+                document.getElementById('nextPage').disabled = true;
+            }
+        }
+
+        function displayPlayers(players) {
+            const tbody = document.getElementById('leaderboardBody');
+            tbody.innerHTML = '';
+            
+            const currentUsername = document.getElementById('userName').textContent;
+            
+            players.forEach(player => {
+                const tr = document.createElement('tr');
+                if (player.name === currentUsername) {
+                    tr.classList.add('current-player');
+                }
+                
+                // Определяем максимальную длину имени
+                const maxNameLength = 15;
+                const displayName = truncateUsername(player.name, maxNameLength);
+                
+                tr.innerHTML = `
+                    <td class="player-rank">${player.rank}</td>
+                    <td class="username-cell" title="${player.name}">${displayName}</td>
+                    <td>${player.rating}</td>
+                    <td>${player.wins}</td>
+                    <td>${player.losses}</td>
+                    <td class="hidden-mobile">${player.total}</td>
+                    <td class="win-rate ${player.winRateClass}">${player.winRate}%</td>
+                `;
+                
+                tbody.appendChild(tr);
+            });
+            
+            if (players.length === 0) {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td colspan="7" style="text-align: center; padding: 20px;">
+                        Нет данных для отображения
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            }
+        }
+
+        // Функция для обрезания длинных имен пользователей
+        function truncateUsername(username, maxLength) {
+            if (!username) return '';
+            
+            if (username.length <= maxLength) {
+                return username;
+            }
+            
+            return username.substring(0, maxLength - 3) + '...';
+        }
+
+        document.getElementById('prevPage').addEventListener('click', () => {
+            if (currentPage > 1) {
+                loadLeaderboardPage(currentPage - 1);
+            }
+        });
+
+        document.getElementById('nextPage').addEventListener('click', () => {
+            if (currentPage < totalPages) {
+                loadLeaderboardPage(currentPage + 1);
+            }
+        });
+
+        document.getElementById('logoutBtn').addEventListener('click', async function() {
+            try {
+                await fetch(`${API_BASE_URL}/auth/logout`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    credentials: 'include'
+                });
+            } catch (error) {
+                console.error('Ошибка при выходе из системы:', error);
+            } finally {
+                window.location.href = 'auth.html';
+            }
+        });
+
+        document.getElementById('scoreboardBtn').addEventListener('click', function() {
+        });
+
+        async function loadUserData() {
+            try {
+                const response = await fetch(`${API_BASE_URL}/profile/get-user-info`);
+                const profileData = await response.json();
+                
+                if (profileData && !profileData.error) {
+                    const userNameElement = document.getElementById('userName');
+                    if (userNameElement) {
+                        userNameElement.textContent = profileData.username || profileData.Username || 'Неизвестный капитан';
+                    }
+                    
+                    const avatar = profileData.avatar || profileData.Avatar;
+                    const wins = profileData.wins || profileData.Wins || 0;
+                    const losses = profileData.losses || profileData.Losses || 0;
+                    
+                    const rating = 1200 + (wins * 30) - (losses * 20);
+                    
+                    const userRatingElement = document.getElementById('userRating');
+                    if (userRatingElement) {
+                        userRatingElement.textContent = rating;
+                    }
+                    
+                    updateRatingStars(rating);
+                    
+                    const userAvatarElement = document.getElementById('userAvatar');
+                    if (userAvatarElement && avatar) {
+                        if (avatar.startsWith('data:image')) {
+                            userAvatarElement.src = avatar;
+                        } else if (avatar.match(/^[A-Za-z0-9+/=]+$/)) {
+                            userAvatarElement.src = `data:image/svg+xml;base64,${avatar}`;
+                        } else {
+                            userAvatarElement.src = avatar;
+                        }
+                    } else if (userAvatarElement) {
+                        const username = profileData.username || profileData.Username || '';
+                        const letter = username.charAt(0).toUpperCase();
+                        userAvatarElement.src = `https://placehold.co/100x100?text=${letter}`;
+                    }
+                } else {
+                    console.error('Ошибка при получении данных профиля:', profileData?.error);
+                    window.location.href = 'auth.html';
+                }
+            } catch (error) {
+                console.error('Ошибка при загрузке данных пользователя:', error);
+                window.location.href = 'auth.html';
+            }
+        }
+        
+        function updateRatingStars(rating) {
+            const starsContainer = document.querySelector('.rating-stars');
+            if (!starsContainer) return;
+            
+            starsContainer.innerHTML = '';
+            
+            const stars = Math.min(5, Math.floor(rating / 300));
+            
+            for (let i = 0; i < 5; i++) {
+                const star = document.createElement('i');
+                star.classList.add(i < stars ? 'fas' : 'far', 'fa-star');
+                starsContainer.appendChild(star);
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', loadUserData);
+
+        window.onload = function() {
+            loadUserData();
+            loadLeaderboardPage(1);
+        };
+    </script>
+</body>
+</html> 

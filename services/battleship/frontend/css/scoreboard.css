@@ -1,0 +1,207 @@
+.leaderboard {
+    width: 90%;
+    max-width: 900px;
+    margin: 0 auto 40px;
+    background: rgba(241, 226, 196, 0.9);
+    border-radius: 10px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    border: 1px solid #8b6b45;
+    overflow: hidden;
+}
+
+.leaderboard-title {
+    font-size: 2rem;
+    text-align: center;
+    color: #331900;
+    padding: 15px 0;
+    background: rgba(139, 107, 69, 0.2);
+    border-bottom: 2px solid #8b6b45;
+    margin-bottom: 0;
+    font-family: 'Courier New', Courier, monospace;
+}
+
+.leaderboard-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.leaderboard-table th,
+.leaderboard-table td {
+    padding: 12px 15px;
+    text-align: center;
+    border-bottom: 1px solid rgba(139, 107, 69, 0.3);
+}
+
+.leaderboard-table th {
+    background-color: rgba(139, 107, 69, 0.1);
+    color: #331900;
+    font-weight: bold;
+    text-transform: uppercase;
+    font-size: 0.9rem;
+    letter-spacing: 1px;
+}
+
+.leaderboard-table tr:nth-child(even) {
+    background-color: rgba(255, 255, 255, 0.2);
+}
+
+.leaderboard-table tr:hover {
+    background-color: rgba(139, 107, 69, 0.15);
+}
+
+.player-rank {
+    font-weight: bold;
+    font-size: 1.2rem;
+}
+
+.current-player {
+    background-color: rgba(201, 166, 107, 0.3) !important;
+    font-weight: bold;
+}
+
+.player-name {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    padding-left: 10px;
+}
+
+.win-rate {
+    font-weight: bold;
+}
+
+.win-rate.high {
+    color: #2e7d32;
+}
+
+.win-rate.medium {
+    color: #f9a825;
+}
+
+.win-rate.low {
+    color: #c62828;
+}
+
+.nav-controls {
+    display: flex;
+    margin-bottom: 10px;
+    justify-content: flex-start;
+    padding: 0 20px;
+    width: 100%;
+}
+
+.back-btn {
+    display: inline-block;
+    margin: 15px 0;
+    padding: 10px 20px;
+    background-color: #4a341f;
+    color: #f1e2c4;
+    border: none;
+    border-radius: 20px;
+    font-family: 'Courier New', Courier, monospace;
+    font-weight: bold;
+    font-size: 1.1rem;
+    cursor: pointer;
+    text-decoration: none;
+    transition: all 0.3s;
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.3);
+    width: auto;
+    max-width: fit-content;
+    text-align: center;
+    position: relative;
+    white-space: nowrap;
+    margin-left: 0;
+    letter-spacing: 0.5px;
+}
+
+.back-btn:hover {
+    background-color: #5d4228;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+.back-btn i {
+    margin-right: 8px;
+    font-size: 1.1rem;
+}
+
+.pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 20px;
+    gap: 15px;
+    padding: 10px;
+    background: rgba(139, 107, 69, 0.1);
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.pagination button {
+    padding: 8px 15px;
+    background-color: #4a341f;
+    color: #f1e2c4;
+    border: none;
+    border-radius: 20px;
+    cursor: pointer;
+    font-family: 'Courier New', Courier, monospace;
+    font-weight: bold;
+    transition: all 0.3s;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.pagination button:hover {
+    background-color: #5d4228;
+    transform: translateY(-2px);
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.25);
+}
+
+.pagination button:disabled {
+    background-color: #8b6b45;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+}
+
+.pagination span {
+    font-weight: bold;
+    color: #331900;
+    font-size: 1.1rem;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+/* Стиль для ячейки с именем пользователя */
+.leaderboard-table td.username-cell {
+    max-width: 150px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+@media (max-width: 768px) {
+    .leaderboard-table th,
+    .leaderboard-table td {
+        padding: 8px 10px;
+        font-size: 0.9rem;
+    }
+    
+    .leaderboard-table td.username-cell {
+        max-width: 100px;
+    }
+    
+    .leaderboard-title {
+        font-size: 1.6rem;
+    }
+    
+    .player-name {
+        padding-left: 5px;
+    }
+    
+    .back-btn {
+        margin-left: 20px;
+    }
+    
+    .hidden-mobile {
+        display: none;
+    }
+}

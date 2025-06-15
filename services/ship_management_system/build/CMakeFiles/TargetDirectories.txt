@@ -1,0 +1,13 @@
+/home/incace/Desktop/ctf-tasks/ship_management_system/build/CMakeFiles/edit_cache.dir
+/home/incace/Desktop/ctf-tasks/ship_management_system/build/CMakeFiles/rebuild_cache.dir
+/home/incace/Desktop/ctf-tasks/ship_management_system/build/CMakeFiles/list_install_components.dir
+/home/incace/Desktop/ctf-tasks/ship_management_system/build/CMakeFiles/install.dir
+/home/incace/Desktop/ctf-tasks/ship_management_system/build/CMakeFiles/install/local.dir
+/home/incace/Desktop/ctf-tasks/ship_management_system/build/CMakeFiles/install/strip.dir
+/home/incace/Desktop/ctf-tasks/ship_management_system/build/src/CMakeFiles/ship_management_system.dir
+/home/incace/Desktop/ctf-tasks/ship_management_system/build/src/CMakeFiles/edit_cache.dir
+/home/incace/Desktop/ctf-tasks/ship_management_system/build/src/CMakeFiles/rebuild_cache.dir
+/home/incace/Desktop/ctf-tasks/ship_management_system/build/src/CMakeFiles/list_install_components.dir
+/home/incace/Desktop/ctf-tasks/ship_management_system/build/src/CMakeFiles/install.dir
+/home/incace/Desktop/ctf-tasks/ship_management_system/build/src/CMakeFiles/install/local.dir
+/home/incace/Desktop/ctf-tasks/ship_management_system/build/src/CMakeFiles/install/strip.dir

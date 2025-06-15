@@ -1,0 +1,1 @@
+/home/incace/Desktop/ctf-tasks/ship_management_system/release/bin/ship_management_system

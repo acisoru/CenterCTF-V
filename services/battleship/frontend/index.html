@@ -1,0 +1,538 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate, max-age=0">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    <title>Морской Бой - Главная страница</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <div class="profile-section">
+            <div class="profile-info">
+                <div class="avatar-wrapper">
+                    <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDAiIGhlaWdodD0iMTAwIj48cmVjdCB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgZmlsbD0iI2YyZjJmMiIvPjx0ZXh0IHg9IjUwIiB5PSI1MCIgZm9udC1zaXplPSIxOCIgdGV4dC1hbmNob3I9Im1pZGRsZSIgYWxpZ25tZW50LWJhc2VsaW5lPSJtaWRkbGUiIGZpbGw9IiM2NjY2NjYiPtCX0LDQs9GA0YPQt9C60LA8L3RleHQ+PC9zdmc+" alt="Аватар пользователя" id="userAvatar">
+                </div>
+                <div class="user-details">
+                    <div class="user-name" id="userName">
+                        Загрузка...
+                    </div>
+                    <div class="user-rating">
+                        <span class="rating-value" id="userRating">--</span>
+                        <span class="rating-stars">
+                            <i class="far fa-star"></i>
+                            <i class="far fa-star"></i>
+                            <i class="far fa-star"></i>
+                            <i class="far fa-star"></i>
+                            <i class="far fa-star"></i>
+                        </span>
+                    </div>
+                </div>
+            </div>
+            <div class="user-actions">
+                <button class="action-btn scoreboard-btn" id="scoreboardBtn" title="Таблица рекордов">
+                    <i class="fas fa-trophy"></i>
+                </button>
+                <button class="action-btn settings-btn" id="settingsBtn" title="Настройки">
+                    <i class="fas fa-cog"></i>
+                </button>
+                <button class="action-btn logout-btn" id="logoutBtn" title="Выйти">
+                    <i class="fas fa-sign-out-alt"></i>
+                </button>
+            </div>
+        </div>
+
+        <div class="main-content">
+            <h1 class="title">Морской Бой</h1>
+            <div class="decorative-ship"></div>
+            
+            <div class="instruction-block">
+                <h2>Инструкция</h2>
+                <div class="instruction-text">
+                    <p>Добро пожаловать в игру "Морской Бой" времен Петра I!</p>
+                    
+                    <h3>Правила игры:</h3>
+                    <p>1. <strong>Подготовка к сражению:</strong> Выберите достойного соперника. Флот противника включает:</p>
+                    <ul>
+                        <li>1 линейный корабль (4 клетки)</li>
+                        <li>2 фрегата (по 3 клетки)</li>
+                        <li>3 шлюпа (по 2 клетки)</li>
+                        <li>4 шхуны (по 1 клетке)</li>
+                    </ul>
+                    
+                    <p>2. <strong>Ведение боя:</strong> Стреляйте по кораблям противника, выбирая координаты на поле боя.</p>
+                    
+                    <p>3. <strong>Будьте точны:</strong> Если вы промахнётесь хотя бы раз - битва проиграна!</p>
+                    
+                    <p>4. <strong>Победа:</strong> Полностью уничтожьте вражеский флот без единого промаха, и сокровища противника перейдут в вашу казну!</p>
+                    
+                    <p class="bonus-instruction">По указу Петра I: "Каждый выстрел - как последний! Целься точно, бей без промаха, и сокровища неприятеля наполнят твои сундуки!"</p>
+                </div>
+            </div>
+            
+            <div class="game-buttons">
+                <button class="start-game-btn" id="startGameBtn">
+                    Начать игру
+                </button>
+                <button class="find-opponent-btn" id="selectOpponentBtn">
+                    Выбрать соперника
+                </button>
+            </div>
+        </div>
+
+        <div class="footer">
+            <div class="imperial-seal"></div>
+            <p>Создано по указу Его Императорского Величества, Лето 1696</p>
+        </div>
+    </div>
+
+    <div class="modal" id="opponentModal">
+        <div class="modal-content">
+            <span class="close-modal">&times;</span>
+            <h3>Выбор соперника</h3>
+            <form id="opponentForm">
+                <div class="form-group">
+                    <label for="opponentName">Введите имя соперника:</label>
+                    <input type="text" id="opponentName" name="opponentName" placeholder="Имя соперника">
+                    <div class="error-message" id="opponentError" style="display: none; color: #8b3a2e; margin-top: 5px; font-size: 0.9rem;"></div>
+                </div>
+                <button type="submit" class="submit-btn">Начать сражение</button>
+            </form>
+        </div>
+    </div>
+
+    <div class="modal" id="settingsModal">
+        <div class="modal-content settings-modal">
+            <span class="close-modal" id="closeSettingsModal">&times;</span>
+            <h3>Настройки профиля</h3>
+            <div class="profile-message" id="profileMessage" style="margin-bottom: 15px; padding: 10px; border-radius: 5px; display: none;">
+                Сообщение
+            </div>
+            <form id="settingsForm">
+                <div class="form-group">
+                    <label for="username">Имя капитана:</label>
+                    <input type="text" id="username" name="username" placeholder="Загрузка...">
+                </div>
+                
+                <div class="form-group">
+                    <label for="oldPassword">Текущий пароль:</label>
+                    <input type="password" id="oldPassword" name="oldPassword" placeholder="Введите текущий пароль">
+                </div>
+                
+                <div class="form-group">
+                    <label for="newPassword">Новый пароль:</label>
+                    <input type="password" id="newPassword" name="newPassword" placeholder="Введите новый пароль">
+                </div>
+                
+                <div class="form-group">
+                    <label for="treasure">Сокровище:</label>
+                    <input type="text" id="treasure" name="treasure" placeholder="Загрузка...">
+                </div>
+                
+                <button type="submit" class="submit-btn">Сохранить изменения</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE_URL = '/api';
+
+        async function apiRequest(url, method, data) {
+            try {
+                const fullUrl = new URL(url, window.location.origin).href;
+                
+                const response = await fetch(url, {
+                    method: method,
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json',
+                        'Cache-Control': 'no-cache'
+                    },
+                    body: data ? JSON.stringify(data) : undefined,
+                    credentials: 'include',
+                    cache: 'no-cache'
+                });
+                
+                if (!response.ok) {
+                    if (response.status === 401) {
+                        console.error('Ошибка аутентификации: токен отсутствует или недействителен');
+                        setTimeout(() => {
+                            window.location.href = 'auth.html';
+                        }, 500);
+                        
+                        return { success: false, error: 'Требуется авторизация' };
+                    } else {
+                        return { success: false, error: `Ошибка ${response.status}: ${response.statusText}` };
+                    }
+                }
+                
+                const responseText = await response.text();
+                
+                if (!responseText.trim()) {
+                    return { success: true };
+                }
+                
+                try {
+                    const jsonData = JSON.parse(responseText);
+                    return jsonData;
+                } catch (jsonError) {
+                    console.error('Ошибка разбора JSON:', jsonError);
+                    return { 
+                        success: false, 
+                        error: 'Ошибка разбора JSON',
+                        rawResponse: responseText
+                    };
+                }
+            } catch (error) {
+                console.error(`Ошибка API запроса к ${url}:`, error);
+                return { success: false, error: `Ошибка запроса: ${error.message}` };
+            }
+        }
+
+        async function loadUserData() {
+            try {
+                const profileData = await loadProfileFromServer();
+                
+                if (!profileData || profileData.error) {
+                    setTimeout(() => {
+                        window.location.href = 'auth.html';
+                    }, 500);
+                }
+            } catch (error) {
+                console.error('Ошибка загрузки данных пользователя:', error);
+                setTimeout(() => {
+                    window.location.href = 'auth.html';
+                }, 500);
+            }
+        }
+        
+        async function loadProfileFromServer() {
+            try {
+                const profileData = await apiRequest(`${API_BASE_URL}/profile/get-user-info`, 'GET');
+                
+                if (profileData && typeof profileData === 'object') {
+                    const username = profileData.username || profileData.Username || '';
+                    const avatar = profileData.avatar || profileData.Avatar || '';
+                    const treasure = profileData.treasure || profileData.Treasure || '';
+                }
+                
+                if (!profileData.error) {
+                    updateProfileDisplay(profileData);
+                    
+                    return profileData;
+                } else {
+                    console.error('Ошибка загрузки профиля:', profileData.error);
+                    if (profileData.error && profileData.error.includes('авторизация')) {
+                        setTimeout(() => {
+                            window.location.href = 'auth.html';
+                        }, 500);
+                    }
+                }
+            } catch (error) {
+                console.error('Ошибка при загрузке профиля:', error);
+                setTimeout(() => {
+                    window.location.href = 'auth.html';
+                }, 500);
+            }
+            return null;
+        }
+        
+        async function getUserTreasure() {
+            try {
+                const treasureData = await apiRequest(`${API_BASE_URL}/profile/get-user-treasure`, 'GET');
+                
+                if (treasureData && !treasureData.error) {
+                    return treasureData.treasure || treasureData.Treasure || '';
+                } else {
+                    console.error('Ошибка загрузки сокровища:', treasureData?.error);
+                    return '';
+                }
+            } catch (error) {
+                console.error('Ошибка при загрузке сокровища:', error);
+                return '';
+            }
+        }
+        
+        function updateProfileDisplay(userData) {
+            if (!userData) return;
+            
+            const username = userData.username || userData.Username || '';
+            const avatar = userData.avatar || userData.Avatar || '';
+            const treasure = userData.treasure || userData.Treasure || '';
+            const wins = userData.wins || userData.Wins || 0;
+            const losses = userData.losses || userData.Losses || 0;
+            
+            const userNameElement = document.getElementById('userName');
+            if (userNameElement) {
+                userNameElement.innerHTML = '';
+                
+                if (username) {
+                    userNameElement.textContent = username;
+                } else {
+                    userNameElement.textContent = 'Без имени';
+                    console.error('В данных профиля отсутствует имя пользователя:', userData);
+                }
+            } else {
+                console.error('Элемент userName не найден!');
+            }
+            
+            const userAvatarElement = document.getElementById('userAvatar');
+            if (userAvatarElement) {
+                if (avatar) {
+                    if (avatar.startsWith('data:image')) {
+                        userAvatarElement.src = avatar;
+                    } else if (avatar.match(/^[A-Za-z0-9+/=]+$/)) {
+                        userAvatarElement.src = `data:image/svg+xml;base64,${avatar}`;
+                    } else {
+                        userAvatarElement.src = avatar;
+                    }
+                }
+            } else {
+                console.error('Элемент userAvatar не найден!');
+            }
+            
+            const rating = 1200 + (wins * 30) - (losses * 20);
+            
+            const userRatingElement = document.getElementById('userRating');
+            if (userRatingElement) {
+                userRatingElement.textContent = rating;
+            } else {
+                console.error('Элемент userRating не найден!');
+            }
+            
+            updateRatingStars(rating);
+        }
+        
+        function updateRatingStars(rating) {
+            const starsContainer = document.querySelector('.rating-stars');
+            if (!starsContainer) return;
+            
+            starsContainer.innerHTML = '';
+            
+            const stars = Math.min(5, Math.floor(rating / 300));
+            
+            for (let i = 0; i < 5; i++) {
+                const star = document.createElement('i');
+                star.classList.add(i < stars ? 'fas' : 'far', 'fa-star');
+                starsContainer.appendChild(star);
+            }
+        }
+        
+        async function updateProfile(profileData) {
+            const profileMessage = document.getElementById('profileMessage');
+            try {
+                const formattedData = {
+                    Username: profileData.username,
+                    Treasure: profileData.treasure
+                };
+                
+                if (profileData.oldPassword) {
+                    formattedData.OldPassword = profileData.oldPassword;
+                }
+                if (profileData.newPassword) {
+                    formattedData.Password = profileData.newPassword;
+                }
+                
+                const response = await apiRequest(`${API_BASE_URL}/profile/update-profile`, 'POST', formattedData);
+                
+                if (response.success) {
+                    await loadProfileFromServer();
+                    
+                    profileMessage.textContent = 'Настройки профиля успешно сохранены!';
+                    profileMessage.style.backgroundColor = '#dff0d8';
+                    profileMessage.style.color = '#3c763d';
+                    profileMessage.style.display = 'block';
+                    
+                    return true;
+                } else {
+                    console.error('Ошибка обновления профиля:', response.error);
+                    profileMessage.textContent = `Ошибка: ${response.error || 'Не удалось обновить профиль'}`;
+                    profileMessage.style.backgroundColor = '#f2dede';
+                    profileMessage.style.color = '#a94442';
+                    profileMessage.style.display = 'block';
+                }
+            } catch (error) {
+                console.error('Ошибка при обновлении профиля:', error);
+                profileMessage.textContent = 'Произошла ошибка при обновлении профиля';
+                profileMessage.style.backgroundColor = '#f2dede';
+                profileMessage.style.color = '#a94442';
+                profileMessage.style.display = 'block';
+            }
+            return false;
+        }
+
+        document.getElementById('startGameBtn').addEventListener('click', async function() {
+            try {
+                let errorMessage = document.createElement('div');
+                errorMessage.className = 'game-error';
+                errorMessage.style.color = '#a94442';
+                errorMessage.style.backgroundColor = '#f2dede';
+                errorMessage.style.padding = '10px';
+                errorMessage.style.borderRadius = '5px';
+                errorMessage.style.marginTop = '10px';
+                errorMessage.style.textAlign = 'center';
+                
+                const response = await apiRequest(`${API_BASE_URL}/game/create-game`, 'POST', {});
+                
+                if (response && !response.error) {
+                    window.location.href = 'game.html';
+                } else {
+                    errorMessage.textContent = 'Ошибка при создании игры: ' + (response.error || 'Неизвестная ошибка');
+                    document.querySelector('.game-buttons').appendChild(errorMessage);
+                    
+                    setTimeout(() => {
+                        if (errorMessage.parentNode) {
+                            errorMessage.parentNode.removeChild(errorMessage);
+                        }
+                    }, 5000);
+                }
+            } catch (error) {
+                console.error('Ошибка при создании игры:', error);
+                errorMessage.textContent = 'Произошла ошибка при создании игры';
+                document.querySelector('.game-buttons').appendChild(errorMessage);
+                
+                setTimeout(() => {
+                    if (errorMessage.parentNode) {
+                        errorMessage.parentNode.removeChild(errorMessage);
+                    }
+                }, 5000);
+            }
+        });
+
+        document.getElementById('selectOpponentBtn').addEventListener('click', function() {
+            document.getElementById('opponentModal').style.display = 'flex';
+        });
+        
+        document.querySelector('.close-modal').addEventListener('click', function() {
+            document.getElementById('opponentModal').style.display = 'none';
+        });
+        
+        document.getElementById('opponentForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const opponentName = document.getElementById('opponentName').value;
+            const errorElement = document.getElementById('opponentError');
+            
+            errorElement.style.display = 'none';
+            errorElement.textContent = '';
+            
+            if (!opponentName.trim()) {
+                errorElement.textContent = 'Пожалуйста, введите имя соперника';
+                errorElement.style.display = 'block';
+                return;
+            }
+            
+            try {
+                const response = await apiRequest(`${API_BASE_URL}/game/create-game`, 'POST', {
+                    opponent_username: opponentName
+                });
+                
+                if (response && !response.error) {
+                    document.getElementById('opponentModal').style.display = 'none';
+                    
+                    window.location.href = 'game.html';
+                } else {
+                    if (response.error && (
+                        response.error.includes('not found') || 
+                        response.error.includes('не найден') || 
+                        response.error.includes('404')
+                    )) {
+                        errorElement.textContent = 'Оппонент не найден';
+                        errorElement.style.display = 'block';
+                    } else {
+                        errorElement.textContent = 'Ошибка при создании игры: ' + (response.error || 'Неизвестная ошибка');
+                        errorElement.style.display = 'block';
+                    }
+                }
+            } catch (error) {
+                console.error('Ошибка при создании игры с соперником:', error);
+                errorElement.textContent = 'Произошла ошибка при создании игры с соперником';
+                errorElement.style.display = 'block';
+            }
+        });
+        
+        document.getElementById('settingsBtn').addEventListener('click', async function() {
+            const profileData = await loadProfileFromServer();
+            const userTreasure = await getUserTreasure();
+            
+            if (profileData) {
+                const username = profileData.username || profileData.Username || '';
+                
+                document.getElementById('username').value = username;
+                document.getElementById('treasure').value = userTreasure;
+                
+                document.getElementById('oldPassword').value = '';
+                document.getElementById('newPassword').value = '';
+            }
+            
+            document.getElementById('settingsModal').style.display = 'flex';
+        });
+        
+        document.getElementById('closeSettingsModal').addEventListener('click', function() {
+            document.getElementById('settingsModal').style.display = 'none';
+        });
+        
+        document.getElementById('settingsForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const username = document.getElementById('username').value;
+            const oldPassword = document.getElementById('oldPassword').value;
+            const newPassword = document.getElementById('newPassword').value;
+            const treasure = document.getElementById('treasure').value;
+            
+            const profileData = {
+                username: username,
+                treasure: treasure
+            };
+            
+            if (oldPassword) {
+                profileData.oldPassword = oldPassword;
+            }
+            
+            if (newPassword) {
+                profileData.newPassword = newPassword;
+            }
+            
+            const success = await updateProfile(profileData);
+            
+            if (success) {
+                setTimeout(() => {
+                    document.getElementById('settingsModal').style.display = 'none';
+                }, 2000);
+            }
+        });
+        
+        document.getElementById('scoreboardBtn').addEventListener('click', function() {
+            window.location.href = 'scoreboard.html';
+        });
+        
+        document.addEventListener('DOMContentLoaded', function() {
+            const userNameElement = document.getElementById('userName');
+            if (userNameElement) {
+                userNameElement.textContent = 'Загрузка...';
+            }
+            
+            loadUserData();
+        });
+        
+        document.getElementById('logoutBtn').addEventListener('click', async function() {
+            try {
+                const response = await fetch(`${API_BASE_URL}/auth/logout`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    credentials: 'include'
+                });
+            } catch (error) {
+                console.error('Ошибка при выходе из системы:', error);
+            } finally {
+                window.location.href = 'auth.html';
+            }
+        });
+    </script>
+</body>
+</html> 

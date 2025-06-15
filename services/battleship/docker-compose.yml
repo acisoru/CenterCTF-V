@@ -1,0 +1,61 @@
+version: '3.8'
+
+services:
+  app:
+    build:
+      context: ./backend
+    container_name: battleship-backend
+    ports:
+      - "15401:8080"
+    volumes:
+      - battleship-data:/app/data
+      - battleship-avatars:/app/avatars
+      - ./backend/.env:/app/.env
+    restart: unless-stopped
+    networks:
+      - battleship-network
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 256M
+        reservations:
+          memory: 128M
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: battleship-frontend
+    ports:
+      - "15400:80"
+    depends_on:
+      - app
+    restart: unless-stopped
+    networks:
+      - battleship-network
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 256M
+        reservations:
+          memory: 128M
+
+  cleaner:
+    image: c4tbuts4d/dedcleaner:latest
+    restart: unless-stopped
+    volumes:
+      - battleship-avatars:/app/avatars
+    environment:
+      - DELETE_AFTER=30m
+      - SLEEP=5m
+      - DIRS=/app/avatars
+
+networks:
+  battleship-network:
+    driver: bridge
+
+volumes:
+  battleship-data:
+  battleship-avatars: 

@@ -1,0 +1,38 @@
+cmake_minimum_required(VERSION 3.15.0 FATAL_ERROR)
+
+project(corax
+        LANGUAGES CXX
+        VERSION 1.0.0
+)
+
+set(CMAKE_C_FLAGS "-O0")
+set(CMAKE_CXX_FLAGS "-O0")
+
+set(CMAKE_C_FLAGS_DEBUG "-O0")
+set(CMAKE_CXX_FLAGS_DEBUG "-O0")
+
+set(CMAKE_C_FLAGS_RELEASE "-O0")
+set(CMAKE_CXX_FLAGS_RELEASE "-O0")
+
+set(CMAKE_C_FLAGS_RELWITHDEBINFO "-O0")
+set(CMAKE_CXX_FLAGS_RELWITHDEBINFO "-O0")
+
+set(CMAKE_C_FLAGS_MINSIZEREL "-O0")
+set(CMAKE_CXX_FLAGS_MINSIZEREL "-O0")
+
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_EXTENSIONS OFF)
+
+if(NOT CMAKE_BUILD_TYPE)
+    set(CMAKE_BUILD_TYPE Release)
+endif()
+
+set(EXECUTABLE_NAME "ship_management_system")
+
+find_package(Boost REQUIRED)
+find_package(jwt-cpp CONFIG REQUIRED)
+
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -lpqxx -lpq -fno-stack-protector -D_FORTIFY_SOURCE=0")
+
+add_subdirectory(src)

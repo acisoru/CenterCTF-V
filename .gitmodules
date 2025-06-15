@@ -1,0 +1,9 @@
+[submodule "services/ship_management_system/libs/jwt-cpp"]
+	path = services/ship_management_system/libs/jwt-cpp
+	url = https://github.com/Thalhammer/jwt-cpp.git
+[submodule "services/ship_management_system/libs/Crow"]
+	path = services/ship_management_system/libs/Crow
+	url = https://github.com/CrowCpp/Crow.git
+[submodule "services/ship_management_system/libs/libbcrypt"]
+	path = services/ship_management_system/libs/libbcrypt
+	url = https://github.com/trusch/libbcrypt.git

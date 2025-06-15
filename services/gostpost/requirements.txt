@@ -1,0 +1,10 @@
+Flask
+marshmallow
+marshmallow-sqlalchemy
+flask-marshmallow
+Flask-Migrate
+SQLAlchemy
+Flask-SQLAlchemy
+gunicorn
+psycopg2-binary
+gostcrypto

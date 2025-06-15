@@ -1,0 +1,20 @@
+name: gostpost
+services:
+  web:
+    build: .
+    ports:
+      - "5454:5454"
+    environment:
+      - DB_URI=postgresql://postgres:postgres@db:5432/gostpost_db
+    restart: unless-stopped
+  db:
+    image: postgres
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=gostpost_db
+    restart: unless-stopped
+volumes:
+  postgres_data:

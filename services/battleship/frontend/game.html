@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate, max-age=0">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    <title>Морской Бой - Игровое поле</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/game.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <div class="profile-section">
+            <div class="profile-info">
+                <div class="avatar-wrapper">
+                    <img src="https://placehold.co/100x100" alt="Аватар пользователя" id="userAvatar">
+                </div>
+                <div class="user-details">
+                    <div class="user-name" id="userName">
+                        Адмирал Петр
+                    </div>
+                    <div class="user-rating">
+                        <span class="rating-value" id="userRating">1200</span>
+                        <span class="rating-stars">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="far fa-star"></i>
+                            <i class="far fa-star"></i>
+                        </span>
+                    </div>
+                </div>
+            </div>
+            <div class="user-actions">
+                <button class="action-btn scoreboard-btn" id="scoreboardBtn" title="Таблица рекордов">
+                    <i class="fas fa-trophy"></i>
+                </button>
+                <button class="action-btn logout-btn" id="logoutBtn" title="Выйти">
+                    <i class="fas fa-sign-out-alt"></i>
+                </button>
+            </div>
+        </div>
+
+        <div class="main-content">
+            <div class="nav-controls">
+                <a href="index.html" class="back-btn"><i class="fas fa-arrow-left"></i> На главную</a>
+            </div>
+            <h1 class="title">Морской Бой - Сражение</h1>
+            
+            <div class="game-area">
+                <div class="game-info">
+                    <div class="opponent-info">
+                        <span class="opponent-label">Противник:</span>
+                        <div class="opponent-name" id="opponentName">Адмирал Нахимов</div>
+                    </div>
+                    <div class="game-status" id="gameStatus">Ваш ход</div>
+                </div>
+                
+                <div class="grid-container">
+                    <div class="grid-labels horizontal">
+                        <div class="label">А</div>
+                        <div class="label">Б</div>
+                        <div class="label">В</div>
+                        <div class="label">Г</div>
+                        <div class="label">Д</div>
+                        <div class="label">Е</div>
+                        <div class="label">Ж</div>
+                        <div class="label">З</div>
+                        <div class="label">И</div>
+                        <div class="label">К</div>
+                    </div>
+                    <div class="grid-labels vertical">
+                        <div class="label">1</div>
+                        <div class="label">2</div>
+                        <div class="label">3</div>
+                        <div class="label">4</div>
+                        <div class="label">5</div>
+                        <div class="label">6</div>
+                        <div class="label">7</div>
+                        <div class="label">8</div>
+                        <div class="label">9</div>
+                        <div class="label">10</div>
+                    </div>
+                    <div class="game-grid" id="gameGrid">
+                    </div>
+                </div>
+                
+                <div class="game-controls">
+                </div>
+            </div>
+        </div>
+
+        <div class="footer">
+            <div class="imperial-seal"></div>
+            <p>Создано по указу Его Императорского Величества, Лето 1696</p>
+        </div>
+    </div>
+    
+    <div class="modal-message" id="gameMessage">
+        <div class="message-content">
+            <h2 class="message-title" id="messageTitle">Победа!</h2>
+            <p class="message-text" id="messageText">Вы потопили вражеский флот!</p>
+            <button class="game-btn" id="messageBtn">Продолжить</button>
+        </div>
+    </div>
+
+    <script>
+        let currentOpponent = null;
+        let gameActive = false;
+        const gridSize = 10;
+        const API_BASE_URL = '/api';
+        
+        function initGame() {
+            createGrid();
+            setupEventListeners();
+            loadUserData();
+        }
+        
+        function createGrid() {
+            const grid = document.getElementById('gameGrid');
+            grid.innerHTML = '';
+            
+            for (let i = 0; i < gridSize; i++) {
+                for (let j = 0; j < gridSize; j++) {
+                    const cell = document.createElement('div');
+                    cell.className = 'grid-cell';
+                    cell.dataset.row = i;
+                    cell.dataset.col = j;
+                    
+                    cell.addEventListener('click', () => handleCellClick(i, j));
+                    
+                    grid.appendChild(cell);
+                }
+            }
+        }
+        
+        function setupEventListeners() {
+            document.getElementById('scoreboardBtn').addEventListener('click', () => {
+                window.location.href = 'scoreboard.html';
+            });
+            document.getElementById('messageBtn').addEventListener('click', closeMessage);
+            document.getElementById('logoutBtn').addEventListener('click', async () => {
+                try {
+                    await fetch(`${API_BASE_URL}/auth/logout`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        credentials: 'include'
+                    });
+                } catch (error) {
+                    console.error('Ошибка при выходе из системы:', error);
+                } finally {
+                    window.location.href = 'auth.html';
+                }
+            });
+        }
+        
+        async function loadGameInfo() {
+            try {
+                const response = await fetch(`${API_BASE_URL}/game/get-game-info`, {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json',
+                    },
+                    credentials: 'include'
+                });
+                
+                if (!response.ok) {
+                    console.error('Ошибка при получении информации об игре:', response.status);
+                    if (response.status === 400) {
+                        window.location.href = 'index.html';
+                        return null;
+                    }
+                    return null;
+                }
+                
+                const gameData = await response.json();
+                
+                if (gameData.opponent_name) {
+                    document.getElementById('opponentName').textContent = gameData.opponent_name;
+                    currentOpponent = { name: gameData.opponent_name };
+                }
+                
+                if (gameData.status === 'active') {
+                    gameActive = true;
+                    document.getElementById('gameStatus').textContent = 'Ваш ход';
+                } else if (gameData.is_completed) {
+                    gameActive = false;
+                    document.getElementById('gameStatus').textContent = 'Игра завершена';
+                }
+
+                if (gameData.shots && Array.isArray(gameData.shots)) {
+                    gameData.shots.forEach(shot => {
+                        const cell = document.querySelector(`.grid-cell[data-row="${shot.y}"][data-col="${shot.x}"]`);
+                        if (cell) {
+                            if (shot.hit) {
+                                cell.classList.add('hit');
+                            } else {
+                                cell.classList.add('miss');
+                            }
+                        }
+                    });
+                }
+                
+                return gameData;
+            } catch (error) {
+                console.error('Ошибка при загрузке информации об игре:', error);
+                return null;
+            }
+        }
+        
+        async function handleCellClick(row, col) {
+            if (!gameActive) {
+                showMessage('Игра не активна', 'Пожалуйста, начните новую игру.');
+                return;
+            }
+            
+            const cell = document.querySelector(`.grid-cell[data-row="${row}"][data-col="${col}"]`);
+            
+            if (cell.classList.contains('hit') || cell.classList.contains('miss')) {
+                return;
+            }
+            
+            try {
+                const response = await fetch(`${API_BASE_URL}/game/make-shot`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ 
+                        position: { 
+                            x: parseInt(col), 
+                            y: parseInt(row)  
+                        } 
+                    }),
+                    credentials: 'include'
+                });
+                
+                if (!response.ok) {
+                    throw new Error(`Ошибка API ${response.status}: ${response.statusText}`);
+                }
+                
+                const data = await response.json();
+                
+                if (data.hit) {
+                    cell.classList.add('hit');
+                    document.getElementById('gameStatus').textContent = 'Попадание!';
+                    
+                    if (data.message && data.message.includes('потоплен')) {
+                        showMessage('Корабль потоплен!', 'Вы успешно потопили вражеский корабль!');
+                    }
+                    
+                    if (data.message && data.message.startsWith('win:')) {
+                        gameActive = false;
+                        const treasure = data.message.substring(5);
+                        showMessage('Победа!', `Вы потопили весь флот ${currentOpponent.name}! Ваш приз: ${treasure}`);
+                    }
+                } else {
+                    cell.classList.add('miss');
+                    document.getElementById('gameStatus').textContent = 'Вы проиграли!';
+                    gameActive = false;
+                    
+                    if (data.message) {
+                        showMessage('Поражение', 'К сожалению, вы промахнулись. Игра окончена.');
+                    }
+                }
+            } catch (error) {
+                console.error('Ошибка при обработке выстрела:', error);
+                showMessage('Ошибка', 'Не удалось обработать ваш выстрел. Пожалуйста, попробуйте еще раз.');
+            }
+        }
+        
+        function showMessage(title, text) {
+            document.getElementById('messageTitle').textContent = title;
+            document.getElementById('messageText').textContent = text;
+            document.getElementById('gameMessage').classList.add('active');
+        }
+        
+        function closeMessage() {
+            document.getElementById('gameMessage').classList.remove('active');
+            if (!gameActive) {
+                window.location.href = 'index.html';
+            }
+        }
+        
+        async function apiRequest(url, method, data) {
+            try {
+                const response = await fetch(url, {
+                    method: method,
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json',
+                        'Cache-Control': 'no-cache'
+                    },
+                    body: data ? JSON.stringify(data) : undefined,
+                    credentials: 'include',
+                    cache: 'no-cache'
+                });
+                
+                if (!response.ok) {
+                    if (response.status === 401) {
+                        setTimeout(() => {
+                            window.location.href = 'auth.html';
+                        }, 500);
+                        
+                        return { success: false, error: 'Требуется авторизация' };
+                    } else {
+                        return { success: false, error: `Ошибка ${response.status}: ${response.statusText}` };
+                    }
+                }
+                
+                const responseText = await response.text();
+                
+                if (!responseText.trim()) {
+                    return { success: true };
+                }
+                
+                try {
+                    const jsonData = JSON.parse(responseText);
+                    return jsonData;
+                } catch (jsonError) {
+                    return { 
+                        success: false, 
+                        error: 'Ошибка разбора JSON',
+                        rawResponse: responseText
+                    };
+                }
+            } catch (error) {
+                console.error(`Ошибка API запроса к ${url}:`, error);
+                return { success: false, error: `Ошибка запроса: ${error.message}` };
+            }
+        }
+        
+        async function loadProfileFromServer() {
+            try {
+                const profileData = await apiRequest(`${API_BASE_URL}/profile/get-user-info`, 'GET');
+                
+                if (!profileData.error) {
+                    updateProfileDisplay(profileData);
+                    return profileData;
+                } else {
+                    console.error('Ошибка загрузки профиля:', profileData.error);
+                    if (profileData.error && profileData.error.includes('авторизация')) {
+                        setTimeout(() => {
+                            window.location.href = 'auth.html';
+                        }, 500);
+                    }
+                }
+            } catch (error) {
+                console.error('Ошибка при загрузке профиля:', error);
+                setTimeout(() => {
+                    window.location.href = 'auth.html';
+                }, 500);
+            }
+            return null;
+        }
+        
+        function updateProfileDisplay(userData) {
+            if (!userData) return;
+            
+            const username = userData.username || userData.Username || '';
+            const avatar = userData.avatar || userData.Avatar || '';
+            const wins = userData.wins || userData.Wins || 0;
+            const losses = userData.losses || userData.Losses || 0;
+            
+            const userNameElement = document.getElementById('userName');
+            if (userNameElement) {
+                if (username) {
+                    userNameElement.textContent = username;
+                } else {
+                    userNameElement.textContent = 'Без имени';
+                }
+            }
+            
+            const rating = 1200 + (wins * 30) - (losses * 20);
+            
+            const userRatingElement = document.getElementById('userRating');
+            if (userRatingElement) {
+                userRatingElement.textContent = rating;
+            }
+            
+            updateRatingStars(rating);
+            
+            const userAvatarElement = document.getElementById('userAvatar');
+            if (userAvatarElement) {
+                if (avatar) {
+                    if (avatar.startsWith('data:image')) {
+                        userAvatarElement.src = avatar;
+                    } else if (avatar.match(/^[A-Za-z0-9+/=]+$/)) {
+                        userAvatarElement.src = `data:image/svg+xml;base64,${avatar}`;
+                    } else {
+                        userAvatarElement.src = avatar;
+                    }
+                }
+            }
+        }
+        
+        function updateRatingStars(rating) {
+            const starsContainer = document.querySelector('.rating-stars');
+            if (!starsContainer) return;
+            
+            starsContainer.innerHTML = '';
+            
+            const stars = Math.min(5, Math.floor(rating / 300));
+            
+            for (let i = 0; i < 5; i++) {
+                const star = document.createElement('i');
+                star.classList.add(i < stars ? 'fas' : 'far', 'fa-star');
+                starsContainer.appendChild(star);
+            }
+        }
+        
+        async function loadUserData() {
+            try {
+                const profileData = await loadProfileFromServer();
+                
+                await loadGameInfo();
+                
+                if (!profileData || profileData.error) {
+                    setTimeout(() => {
+                        window.location.href = 'auth.html';
+                    }, 500);
+                }
+            } catch (error) {
+                console.error('Ошибка загрузки данных пользователя:', error);
+                setTimeout(() => {
+                    window.location.href = 'auth.html';
+                }, 500);
+            }
+        }
+        
+        document.addEventListener('DOMContentLoaded', loadUserData);
+        
+        window.onload = function() {
+            initGame();
+        };
+    </script>
+</body>
+</html> 

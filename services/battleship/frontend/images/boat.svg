@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="200px" height="120px" viewBox="0 0 200 120" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>Петровский корабль</title>
+    <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <!-- Корпус корабля -->
+        <path d="M20,80 C30,85 160,85 180,80 L170,95 C150,100 50,100 30,95 L20,80 Z" fill="#5d4037" stroke="#3e2723" stroke-width="2"></path>
+        
+        <!-- Палуба -->
+        <path d="M40,80 C60,78 140,78 160,80 L160,75 C140,73 60,73 40,75 L40,80 Z" fill="#8d6e63" stroke="#5d4037" stroke-width="1"></path>
+        
+        <!-- Мачта главная -->
+        <line x1="100" y1="75" x2="100" y2="15" stroke="#5d4037" stroke-width="4" stroke-linecap="round"></line>
+        
+        <!-- Мачта передняя -->
+        <line x1="60" y1="75" x2="60" y2="30" stroke="#5d4037" stroke-width="3" stroke-linecap="round"></line>
+        
+        <!-- Мачта задняя -->
+        <line x1="140" y1="75" x2="140" y2="35" stroke="#5d4037" stroke-width="3" stroke-linecap="round"></line>
+        
+        <!-- Паруса -->
+        <path d="M95,20 L105,20 L105,45 C105,45 110,50 105,55 C100,60 85,55 95,45 L95,20 Z" fill="#f5f5f5" stroke="#bdbdbd" stroke-width="1"></path>
+        <path d="M55,35 L65,35 L65,50 C65,50 70,55 65,58 C60,61 50,56 55,50 L55,35 Z" fill="#f5f5f5" stroke="#bdbdbd" stroke-width="1"></path>
+        <path d="M135,40 L145,40 L145,55 C145,55 150,60 145,63 C140,66 130,61 135,55 L135,40 Z" fill="#f5f5f5" stroke="#bdbdbd" stroke-width="1"></path>
+        
+        <!-- Флаг -->
+        <rect x="97" y="10" width="16" height="10" fill="#3f51b5"></rect>
+        <rect x="97" y="10" width="16" height="3.33" fill="#f44336"></rect>
+        <rect x="97" y="16.67" width="16" height="3.33" fill="#f44336"></rect>
+        
+        <!-- Каюта -->
+        <rect x="120" y="75" width="30" height="10" rx="2" fill="#795548" stroke="#5d4037" stroke-width="1"></rect>
+        <rect x="125" y="78" width="5" height="4" fill="#3e2723"></rect>
+        <rect x="135" y="78" width="5" height="4" fill="#3e2723"></rect>
+        
+        <!-- Пушки -->
+        <rect x="45" y="77" width="10" height="3" fill="#212121"></rect>
+        <rect x="65" y="77" width="10" height="3" fill="#212121"></rect>
+        <rect x="85" y="77" width="10" height="3" fill="#212121"></rect>
+        <rect x="105" y="77" width="10" height="3" fill="#212121"></rect>
+        
+        <!-- Декоративные элементы -->
+        <path d="M30,83 L35,85 L40,83" stroke="#8d6e63" stroke-width="1" fill="none"></path>
+        <path d="M50,83 L55,85 L60,83" stroke="#8d6e63" stroke-width="1" fill="none"></path>
+        <path d="M70,83 L75,85 L80,83" stroke="#8d6e63" stroke-width="1" fill="none"></path>
+        <path d="M90,83 L95,85 L100,83" stroke="#8d6e63" stroke-width="1" fill="none"></path>
+        <path d="M110,83 L115,85 L120,83" stroke="#8d6e63" stroke-width="1" fill="none"></path>
+        <path d="M130,83 L135,85 L140,83" stroke="#8d6e63" stroke-width="1" fill="none"></path>
+        <path d="M150,83 L155,85 L160,83" stroke="#8d6e63" stroke-width="1" fill="none"></path>
+        
+        <!-- Носовая фигура -->
+        <path d="M20,80 C15,75 15,70 20,70 C25,70 25,80 20,80 Z" fill="#a1887f" stroke="#8d6e63" stroke-width="1"></path>
+    </g>
+</svg>
